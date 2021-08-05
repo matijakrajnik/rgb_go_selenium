@@ -1,0 +1,6 @@
+# Created logs.
+selenium.log
+xgb.log
+
+# Screenshots
+*.jpg
