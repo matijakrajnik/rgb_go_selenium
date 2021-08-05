@@ -35,17 +35,13 @@ func StartSelenium() (*selenium.Service, error) {
 	return service, err
 }
 
-func createFrameBuffer() *selenium.FrameBuffer {
-	frameBuffer, err := selenium.NewFrameBuffer()
-	if err != nil {
-		log.Panic().Err(err).Msg("Can't create frame buffer.")
-	}
-	return frameBuffer
-}
-
 // ConnectToDisplay creates new frame buffer and connects to X server.
 func ConnectToDisplay() (*xgbutil.XUtil, error) {
-	frameBuffer := createFrameBuffer()
+	frameBuffer, err := selenium.NewFrameBuffer()
+	if err != nil {
+		log.Error().Err(err).Msg("Can't create frame buffer.")
+		return nil, err
+	}
 	logFile, err := os.OpenFile(XGBLogPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Error().Err(err).Str("XGBLogPath", XGBLogPath).Msg("Error while opening XGB log file.")
