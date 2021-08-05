@@ -31,8 +31,12 @@ var _ = Describe("User", func() {
 
 	BeforeEach(func() {
 		var err error
-		service = StartSelenium()
-		display = ConnectToDisplay()
+		service, err = StartSelenium()
+		Expect(service).ToNot(BeZero())
+		ErrCheck(err)
+		display, err = ConnectToDisplay()
+		Expect(display).ToNot(BeZero())
+		ErrCheck(err)
 		wd, err = selenium.NewRemote(GetCaps(), fmt.Sprintf("http://localhost:%d/wd/hub", GetConf().Port))
 		ErrCheck(err)
 		Expect(wd).ToNot(BeZero())

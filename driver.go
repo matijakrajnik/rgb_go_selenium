@@ -15,10 +15,11 @@ const (
 )
 
 // StartSelenium starts Selenium server. Log output is saved to SeleniumLogPath file.
-func StartSelenium() *selenium.Service {
+func StartSelenium() (*selenium.Service, error) {
 	logFile, err := os.OpenFile(SeleniumLogPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Panic().Err(err).Str("SeleniumLogPath", SeleniumLogPath).Msg("Error while opening Selenium log file.")
+		log.Error().Err(err).Str("SeleniumLogPath", SeleniumLogPath).Msg("Error while opening Selenium log file.")
+		return nil, err
 	}
 
 	opts := []selenium.ServiceOption{
@@ -29,9 +30,9 @@ func StartSelenium() *selenium.Service {
 
 	service, err := selenium.NewSeleniumService(seleniumPath, conf.Port, opts...)
 	if err != nil {
-		log.Panic().Err(err).Msg("Can't start Selenium server.")
+		log.Error().Err(err).Msg("Can't start Selenium server.")
 	}
-	return service
+	return service, nil
 }
 
 func createFrameBuffer() *selenium.FrameBuffer {
@@ -43,16 +44,17 @@ func createFrameBuffer() *selenium.FrameBuffer {
 }
 
 // ConnectToDisplay creates new frame buffer and connects to X server.
-func ConnectToDisplay() *xgbutil.XUtil {
+func ConnectToDisplay() (*xgbutil.XUtil, error) {
 	frameBuffer := createFrameBuffer()
 	logFile, err := os.OpenFile(XGBLogPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Panic().Err(err).Str("XGBLogPath", XGBLogPath).Msg("Error while opening XGB log file.")
+		log.Error().Err(err).Str("XGBLogPath", XGBLogPath).Msg("Error while opening XGB log file.")
+		return nil, err
 	}
 	xgb.Logger.SetOutput(logFile)
 	display, err := xgbutil.NewConnDisplay(conf.DisplayAddress + ":" + frameBuffer.Display)
 	if err != nil {
-		log.Panic().Err(err).Msg("Can't connect to display.")
+		log.Error().Err(err).Msg("Can't connect to display.")
 	}
-	return display
+	return display, err
 }
