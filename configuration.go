@@ -1,6 +1,7 @@
 package rgb_go_selenium
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/rs/zerolog/log"
@@ -46,6 +47,8 @@ type Conf struct {
 	Headless       bool
 	DisplayAddress string
 	Port           int
+	Width          int
+	Height         int
 }
 
 var (
@@ -72,7 +75,10 @@ func SetCaps(conf Conf) {
 func GetCaps() selenium.Capabilities { return caps }
 
 func setFirefoxCaps() {
-	args := []string{}
+	args := []string{
+		fmt.Sprintf("--width=%d", conf.Width),
+		fmt.Sprintf("--height=%d", conf.Height),
+	}
 	if conf.Headless {
 		args = append(args, "-headless")
 	}
@@ -87,7 +93,7 @@ func setFirefoxCaps() {
 
 func setChromeCaps() {
 	args := []string{
-		"--start-maximized",
+		fmt.Sprintf("--window-size=%d,%d", conf.Width, conf.Height),
 		"--ignore-certificate-errors",
 		"--disable-extensions",
 		"--no-sandbox",

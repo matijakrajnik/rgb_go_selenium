@@ -15,6 +15,8 @@ var (
 	headless       = flag.String("headless", "false", `Sets headless mode. Possible values are "false" and "true"`)
 	displayAddress = flag.String("displayAddress", "", `X server address.`)
 	port           = flag.Int("port", 4444, `Selenium server port. Must be a number between 1024-65535.`)
+	width          = flag.Int("width", 1920, `Display width.`)
+	height         = flag.Int("height", 1080, `Display height.`)
 )
 
 func usage() {
@@ -57,6 +59,8 @@ func ParseArgs() {
 		Headless:       isHeadless,
 		DisplayAddress: *displayAddress,
 		Port:           *port,
+		Width:          *width,
+		Height:         *height,
 	}
 
 	// Set caps global variable.
