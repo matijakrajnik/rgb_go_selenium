@@ -29,9 +29,6 @@ const (
 	geckoDriverPath  = "/usr/bin/geckodriver"
 	chromeDriverPath = "/usr/bin/chromedriver"
 
-	// Port on which Selenium server will listen.
-	seleniumPort = 4444
-
 	// Default timeout for WebDriver.
 	DefTimeout = 5 * time.Second
 )

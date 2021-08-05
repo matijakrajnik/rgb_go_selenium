@@ -27,7 +27,7 @@ func StartSelenium() *selenium.Service {
 		selenium.Output(logFile),                // Output debug information to selenium.log file.
 	}
 
-	service, err := selenium.NewSeleniumService(seleniumPath, seleniumPort, opts...)
+	service, err := selenium.NewSeleniumService(seleniumPath, conf.Port, opts...)
 	if err != nil {
 		log.Panic().Err(err).Msg("Can't start Selenium server.")
 	}
