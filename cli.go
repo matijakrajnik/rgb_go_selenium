@@ -3,6 +3,7 @@ package rgb_go_selenium
 import (
 	"flag"
 	"fmt"
+	"net/url"
 	"os"
 	"strconv"
 )
@@ -13,7 +14,7 @@ var (
 	env            = flag.String("env", "dev", `Sets run environment. Possible values are "dev", "uat" and "preprod"`)
 	headless       = flag.String("headless", "false", `Sets headless mode. Possible values are "false" and "true"`)
 	displayAddress = flag.String("displayAddress", "", `X server address.`)
-	port           = flag.Int("port", 4444, `Selenium server port. Must be a number.`)
+	port           = flag.Int("port", 4444, `Selenium server port. Must be a number between 1024-65535.`)
 )
 
 func usage() {
@@ -41,8 +42,10 @@ func ParseArgs() {
 	// - browser is neither "chrome" or "firefox",
 	// - env is neither "dev", "uat" or "preprod",
 	// - headless is neither "false" or "true",
+	// - displayAddress is not valid IP address,
+	// - port is a number between 1024-65535
 	isHeadless, err := strconv.ParseBool(*headless)
-	if !(validBrowserArg() && validEnvArg() && err == nil) {
+	if !(validBrowserArg() && validEnvArg() && err == nil && validDisplayArg() && (*port >= 1024 && *port <= 65535)) {
 		usage()
 		os.Exit(2)
 	}
@@ -66,4 +69,9 @@ func validBrowserArg() bool {
 
 func validEnvArg() bool {
 	return *env == string(DevEnv) || *env == string(UATEnv) || *env == string(PreprodEnv)
+}
+
+func validDisplayArg() bool {
+	_, err := url.Parse(*displayAddress)
+	return err == nil
 }
