@@ -32,7 +32,7 @@ func StartSelenium() (*selenium.Service, error) {
 	if err != nil {
 		log.Error().Err(err).Msg("Can't start Selenium server.")
 	}
-	return service, nil
+	return service, err
 }
 
 func createFrameBuffer() *selenium.FrameBuffer {
