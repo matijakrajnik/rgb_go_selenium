@@ -10,10 +10,6 @@ import (
 	"github.com/tebeka/selenium"
 )
 
-const (
-	defTimeout = 5 * time.Second
-)
-
 // Avoid Ginkgo and Gomega dot imports by assigning needed functions to variables.
 var (
 	Fail        = ginkgo.Fail
@@ -56,6 +52,8 @@ func MustFindElement(wd selenium.WebDriver, by, value string) selenium.WebElemen
 
 // MustNotFindElement returns fails if element is found.
 func MustNotFindElement(wd selenium.WebDriver, by, value string) {
+	wd.SetImplicitWaitTimeout(time.Second)
+	defer wd.SetImplicitWaitTimeout(DefTimeout)
 	element, err := wd.FindElement(by, value)
 	Expect(element).To(BeZero())
 	Expect(err).To(HaveOccurred())
