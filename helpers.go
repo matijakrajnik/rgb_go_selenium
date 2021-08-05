@@ -54,6 +54,14 @@ func MustFindElement(wd selenium.WebDriver, by, value string) selenium.WebElemen
 	return element
 }
 
+// MustNotFindElement returns fails if element is found.
+func MustNotFindElement(wd selenium.WebDriver, by, value string) {
+	element, err := wd.FindElement(by, value)
+	Expect(element).To(BeZero())
+	Expect(err).To(HaveOccurred())
+}
+
+// MustWaitWithTimeout wait for passed selenium.Condition a given amount of time and checks for returned error value.
 func MustWaitWithTimeout(wd selenium.WebDriver, condition selenium.Condition, timeout time.Duration) {
 	ErrCheck(wd.WaitWithTimeout(condition, timeout))
 }

@@ -69,4 +69,23 @@ var _ = Describe("User", func() {
 		logoutLink := MustFindElement(wd, selenium.ByCSSSelector, ".btn-dark")
 		Expect(logoutLink).ToNot(BeZero())
 	})
+
+	It("can't create new account if username is too short", func() {
+		loginLink := MustFindElement(wd, selenium.ByLinkText, "LOGIN")
+		ErrCheck(loginLink.Click())
+		newAccountLink := MustFindElement(wd, selenium.ByCSSSelector, ".btn-link")
+		ErrCheck(newAccountLink.Click())
+		usernameInput := MustFindElement(wd, selenium.ByID, "username")
+		ErrCheck(usernameInput.SendKeys("bat"))
+		passwordInput := MustFindElement(wd, selenium.ByID, "password")
+		ErrCheck(passwordInput.SendKeys(password))
+		submitButton := MustFindElement(wd, selenium.ByCSSSelector, ".btn-success")
+		ErrCheck(submitButton.Click())
+		MustWaitWithTimeout(wd, func(wd selenium.WebDriver) (bool, error) {
+			errorMsg := MustFindElement(wd, selenium.ByCSSSelector, ".alert-danger")
+			text, err := errorMsg.Text()
+			return text == "Username must be longer than or equal 5 characters.", err
+		}, 5*time.Second)
+		MustNotFindElement(wd, selenium.ByCSSSelector, ".btn-dark")
+	})
 })
