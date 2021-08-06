@@ -45,7 +45,7 @@ func ParseArgs() {
 	// - env is neither "dev", "uat" or "preprod",
 	// - headless is neither "false" or "true",
 	// - displayAddress is not valid IP address,
-	// - port is a number between 1024-65535
+	// - port is not a number between 1024-65535
 	isHeadless, err := strconv.ParseBool(*headless)
 	if !(validBrowserArg() && validEnvArg() && err == nil && validDisplayArg() && (*port >= 1024 && *port <= 65535)) {
 		usage()
