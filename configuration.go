@@ -60,26 +60,26 @@ var (
 func GetConf() Conf { return conf }
 
 // SetCaps defines Selenium capabailities based on passed configuration.
-func SetCaps(conf Conf) {
-	switch conf.Browser {
+func SetCaps(cnf Conf) {
+	switch cnf.Browser {
 	case Firefox:
-		setFirefoxCaps()
+		setFirefoxCaps(cnf)
 	case Chrome:
-		setChromeCaps()
+		setChromeCaps(cnf)
 	default:
-		log.Panic().Str("Browser", string(conf.Browser)).Msg("Invalid Browser type.")
+		log.Panic().Str("Browser", string(cnf.Browser)).Msg("Invalid Browser type.")
 	}
 }
 
 // GetCaps returns currently set Selenium capabilities.
 func GetCaps() selenium.Capabilities { return caps }
 
-func setFirefoxCaps() {
+func setFirefoxCaps(cnf Conf) {
 	args := []string{
-		fmt.Sprintf("--width=%d", conf.Width),
-		fmt.Sprintf("--height=%d", conf.Height),
+		fmt.Sprintf("--width=%d", cnf.Width),
+		fmt.Sprintf("--height=%d", cnf.Height),
 	}
-	if conf.Headless {
+	if cnf.Headless {
 		args = append(args, "-headless")
 	}
 	firefoxCaps := firefox.Capabilities{
@@ -91,15 +91,15 @@ func setFirefoxCaps() {
 	}
 }
 
-func setChromeCaps() {
+func setChromeCaps(cnf Conf) {
 	args := []string{
-		fmt.Sprintf("--window-size=%d,%d", conf.Width, conf.Height),
+		fmt.Sprintf("--window-size=%d,%d", cnf.Width, cnf.Height),
 		"--ignore-certificate-errors",
 		"--disable-extensions",
 		"--no-sandbox",
 		"--disable-dev-shm-usage",
 	}
-	if conf.Headless {
+	if cnf.Headless {
 		args = append(args, "--headless", "--disable-gpu")
 	}
 	chromeCaps := map[string]interface{}{
